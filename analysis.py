@@ -77,10 +77,16 @@ def calculateRating(training, testing, final):
             mean_rating = np.mean(row[3])
             std_deviation = np.std(row[3])
             # METHOD 1 - SIMPLE AVERAGE, SCORE=.85
-            final[i][2] += averageScore
+            #final[i][2] += averageScore
             # METHOD 2 - ADD ALL STATS, SCORE=.77
             #final[i][2] = final[i][2] + maxScore + minScore + sumScore + averageScore + varianceScore'
             # METHOD 3 - ADD SUM OF SCORES, SCORE=.84
+            #final[i][2] += sumScore
+            # METHOD 4 - WEIGHT GENRE LOWER, WEIGHT SONG/ARTIST/ALBUM HIGHER, THEN ADD, SCORE=
+            song_artist_album = 3 * final[i][2]
+            genre = 1 * sumScore
+            overall = (song_artist_album + genre) / (3+1)
+            final[i][2] += overall
         # delete the genre calculation row, we don't need it anymore
         del final[i][3]
 
