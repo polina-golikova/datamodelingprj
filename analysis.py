@@ -74,8 +74,13 @@ def calculateRating(training, testing, final):
             sumScore = sum(row[3])
             averageScore = np.average(row[3])
             varianceScore = np.var(row[3])
-            # add average score of genre ratings to final rating
+            mean_rating = np.mean(row[3])
+            std_deviation = np.std(row[3])
+            # METHOD 1 - SIMPLE AVERAGE, SCORE=.85
             final[i][2] += averageScore
+            # METHOD 2 - ADD ALL STATS, SCORE=.77
+            #final[i][2] = final[i][2] + maxScore + minScore + sumScore + averageScore + varianceScore'
+            # METHOD 3 - ADD SUM OF SCORES, SCORE=.84
         # delete the genre calculation row, we don't need it anymore
         del final[i][3]
 
