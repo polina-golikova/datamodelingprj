@@ -27,7 +27,7 @@ def prepareTest():
                 tData[i][j] = 0
             else:
                 tData[i][j] = int(tData[i][j])
-        row = [tData[i][0], tData[i][1], 0, []]
+        row = [tData[i][0], tData[i][1], 0, 0, 0, []]
         result.append(row)
 
     # convert testing array into a np array
@@ -58,37 +58,52 @@ def calculateRating(training, testing, final):
     for i, music in enumerate(testing):
         if music[0] in matching_dict:
             for rating in matching_dict[music[0]]:
-                if rating[0] == music[1] or rating[0] == music[2] or rating[0] == music[3]:
+                if rating[0] == music[1]:
                     final[i][2] += rating[1]
+                if rating[0] == music[2]:
+                    final[i][3] += rating[1]
+                if rating[0] == music[3]:
+                    final[i][4] += rating[1]
                 if rating[0] in music[4:]:
-                    final[i][3].append(rating[1])
+                    final[i][5].append(rating[1])
 
 
     # calculate stats for genre data
     for i, row in enumerate(final):
-        genreCount = len(row[3])
+        genreCount = len(row[5])
         # if we had genre ratings, find max, min, sum, avg, and var
         if genreCount > 0:
-            maxScore = max(row[3])
-            minScore = min(row[3])
-            sumScore = sum(row[3])
-            averageScore = np.average(row[3])
-            varianceScore = np.var(row[3])
-            mean_rating = np.mean(row[3])
-            std_deviation = np.std(row[3])
+            maxScore = max(row[5])
+            minScore = min(row[5])
+            sumScore = sum(row[5])
+            averageScore = np.average(row[5])
+            varianceScore = np.var(row[5])
+            mean_rating = np.mean(row[5])
+            std_deviation = np.std(row[5])
             # METHOD 1 - SIMPLE AVERAGE, SCORE=.85
             #final[i][2] += averageScore
             # METHOD 2 - ADD ALL STATS, SCORE=.77
             #final[i][2] = final[i][2] + maxScore + minScore + sumScore + averageScore + varianceScore'
             # METHOD 3 - ADD SUM OF SCORES, SCORE=.84
             #final[i][2] += sumScore
-            # METHOD 4 - WEIGHT GENRE LOWER, WEIGHT SONG/ARTIST/ALBUM HIGHER, THEN ADD, SCORE=
-            song_artist_album = 3 * final[i][2]
-            genre = 1 * sumScore
-            overall = (song_artist_album + genre) / (3+1)
-            final[i][2] += overall
+            # METHOD 4 - WEIGHT GENRE LOWER, WEIGHT SONG/ARTIST/ALBUM HIGHER, THEN ADD, SCORE=.86
+            #song_artist_album = 9 * final[i][2]
+            #genre = 1 * sumScore
+            #overall = (song_artist_album + genre) / (9+1)
+            #final[i][2] = 0
+            #inal[i][2] += overall
+        # METHOD 5 - WEIGHT SONG, ALBUM, ARTIST, THEN GENRE, SCORE=
+            genreW = sumScore * 1
+        else:
+            genreW = 0
+        songW = final[i][2] * 9
+        albumW = final[i][3] * 6
+        artistW = final[i][4] * 3
+        overall = (songW + artistW + albumW + genreW) / (9 + 6 + 3 + 1)
+        final[i][2] = 0
+        final[i][2] = overall
         # delete the genre calculation row, we don't need it anymore
-        del final[i][3]
+        del final[i][5], final[i][4], final[i][3]
 
 
     # sort final calculations by rating
