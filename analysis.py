@@ -97,9 +97,9 @@ def calculateRating(training, testing, final):
         else:
             genreW = 0
         songW = final[i][2] * 9
-        albumW = final[i][3] * 6
+        albumW = final[i][3] * 5
         artistW = final[i][4] * 3
-        overall = (songW + artistW + albumW + genreW) / (9 + 6 + 3 + 1)
+        overall = (songW + artistW + albumW + genreW) / (9 + 5 + 3 + 1)
         final[i][2] = 0
         final[i][2] = overall
         # delete the genre calculation row, we don't need it anymore
